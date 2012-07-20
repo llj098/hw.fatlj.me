@@ -1,6 +1,6 @@
 # This is the default format. 
 # For more see: https://github.com/mojombo/jekyll/wiki/Permalinks
-permalink: /:categories/:year/:month/:day/:title 
+permalink: /:categories/:title 
 
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
 auto: true
@@ -14,7 +14,7 @@ tagline: Site Tagline
 author :
   name : HW Editors
   email : blah@email.test.com
-  feedburner : feedname
+  # feedburner : feedname
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 

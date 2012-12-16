@@ -1,0 +1,44 @@
+(ns hn-analyse.core)
+
+
+
+
+
+
+
+
+(defn -main[]
+  (let [result (redis/zrange "hn-page" 0 -1)
+        all-news (map #(html/html-resourse (java.io.StringReader. (b64/decode (.getBytes %)))) result)]
+    (map #( %) all-news
+
+
+
+         )))
+
+
+
+
+(defn hn-headlines [h]
+  (let [t (html/select h [:td.title :a])]
+    map #({:name (html/text %) :link (-> % :attrs :href)}) t))
+
+
+(defn hn-points [h]
+  (map #(hash-map :points (.replaceAll (html/text %) "\\D" ""))  (html/select h [:td.subtext html/first-child])) 
+
+
+
+(defn hn-one-page[hl hp]
+  (let [l (map-indexed #(hash-map (:name %1 :points (nth hp %0))) hl)]
+    (sort-by :points > l)))
+
+
+
+(defn xx[l]
+  (map xx #(redis/zadd db "hn-data" tick (pr-str %)) l))
+
+
+
+(defn merge-result [l]
+  (map #(first (sort-by :points > %)) (vals (group-by :name l))))

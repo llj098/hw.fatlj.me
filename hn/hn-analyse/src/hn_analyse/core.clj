@@ -21,14 +21,14 @@
              :comments (parse-int (html/text comments))
              :comments-link  (:href (:attrs comments))})))
 
-(defn files-to-results [d]
-  (map #(gen-result (select-contents %))
-       (map html/html-resource (load-files d))))
-
 (defn load-files [d]
   (sort #(< (.lastModified %) (.lastModified %2))
         (remove #(.isDirectory %)
                 (file-seq (clojure.java.io/file d)))))
 
+(defn files-to-results [d]
+  (map #(gen-result (select-contents %))
+       (map html/html-resource (load-files d))))
+
 (defn -main [d]
-  (apply merge (files-to-results d)))
+  (sort-by :points > (vals (apply merge (files-to-results d)))))

@@ -5,5 +5,6 @@
                  [clj-redis "0.0.12"]
                  [org.clojure/data.codec "0.1.0"]
                  [enlive "1.1.1"]
-                 [de.jetwick/snacktory "1.2"]]
+                 [de.jetwick/snacktory "1.2"]
+                 [org.clojure/data.json "0.2.2"]]
    :main hn-analyse.core)

@@ -1,5 +1,6 @@
 (ns hn-analyse.core
-  (:require [net.cgrand.enlive-html :as html])
+  (:require [net.cgrand.enlive-html :as html]
+            [clojure.data.json :as json])
   (:import (de.jetwick.snacktory HtmlFetcher))
   (:gen-class))
 
@@ -41,8 +42,9 @@
             title link points comments-link)))
 
 (defn -main [d limit]
-  (doall
-   (map println
-        (to-markdown
-         (take (read-string limit)
-               (map-to-results (files-to-map d)))))))
+  (do
+    (json/write
+     (take (read-string limit)
+           (map-to-results (files-to-map d)))
+     *out*)
+    (flush)))

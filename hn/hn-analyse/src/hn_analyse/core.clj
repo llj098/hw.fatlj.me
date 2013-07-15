@@ -47,7 +47,7 @@
 
 (defn to-markdown [m]
   (for [{:keys [points title link comments-link]} m]
-    (format "- [%s](%s) (_%s_) &nbsp; &nbsp; [_hn comments_](https://news.ycombinator.com/%s)  \r\n"
+    (format "- [%s](%s) (_%s_) &nbsp; &nbsp; [_comments_](https://news.ycombinator.com/%s)  \r\n"
             title link points comments-link)))
 
 (defn -main [d limit]

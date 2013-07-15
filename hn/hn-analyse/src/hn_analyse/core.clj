@@ -24,10 +24,19 @@
              :comments (parse-int (html/text comments))
              :comments-link  (:href (:attrs comments))})))
 
-(defn load-files [d]
-  (sort #(< (.lastModified %) (.lastModified %2))
-        (remove #(.isDirectory %)
-                (file-seq (clojure.java.io/file d)))))
+(defn load-files
+  ( [d]
+      (sort #(< (.lastModified %) (.lastModified %2))
+            (remove #(.isDirectory %)
+                    (file-seq (clojure.java.io/file d)))))
+  ([d hours]
+     (let [files (load-files d)]
+       (filter #(< (clj-time.core/in-hours
+                    (clj-time.core/interval
+                     (clj-time.coerce/from-long (.lastModified %))
+                     (clj-time.core/now)))
+                   hours)
+               files))))
 
 (defn files-to-map [d]
   (map #(gen-result (select-contents %))

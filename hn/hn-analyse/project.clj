@@ -6,5 +6,6 @@
                  [org.clojure/data.codec "0.1.0"]
                  [enlive "1.1.1"]
                  [de.jetwick/snacktory "1.2"]
-                 [org.clojure/data.json "0.2.2"]]
+                 [org.clojure/data.json "0.2.2"]
+                 [clj-time "0.5.1"]]
    :main hn-analyse.core)

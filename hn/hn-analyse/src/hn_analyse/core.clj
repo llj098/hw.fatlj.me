@@ -1,6 +1,7 @@
 (ns hn-analyse.core
   (:require [net.cgrand.enlive-html :as html]
             [clojure.data.json :as json])
+  (:use [clojure.tools.cli :only [cli]])
   (:import (de.jetwick.snacktory HtmlFetcher))
   (:gen-class))
 
@@ -24,19 +25,10 @@
              :comments (parse-int (html/text comments))
              :comments-link  (:href (:attrs comments))})))
 
-(defn load-files
-  ( [d]
-      (sort #(< (.lastModified %) (.lastModified %2))
-            (remove #(.isDirectory %)
-                    (file-seq (clojure.java.io/file d)))))
-  ([d hours]
-     (let [files (load-files d)]
-       (filter #(< (clj-time.core/in-hours
-                    (clj-time.core/interval
-                     (clj-time.coerce/from-long (.lastModified %))
-                     (clj-time.core/now)))
-                   hours)
-               files))))
+(defn load-files [d]
+  (sort #(< (.lastModified %) (.lastModified %2))
+        (remove #(.isDirectory %)
+                (file-seq (clojure.java.io/file d)))))
 
 (defn files-to-map [d]
   (map #(gen-result (select-contents %))
@@ -50,10 +42,18 @@
     (format "- [%s](%s) (_%s_) &nbsp; &nbsp; [_comments_](https://news.ycombinator.com/%s)  \r\n"
             title link points comments-link)))
 
-(defn -main [d limit]
-  (do
-    (json/write
-     (take (read-string limit)
-           (map-to-results (files-to-map d)))
-     *out*)
-    (flush)))
+(defn run [{:keys [source count format]}]
+  (let [data (take count (map-to-results (files-to-map source)))]
+    (cond
+     (= format "edn") (clojure.pprint/pprint data)
+     (= format "md") (doseq [item (to-markdown data)] (println item)))))
+
+(defn -main [& args]
+  (let [pa (cli args
+                ["-s" "--source" "source" :default nil]
+                ["-c" "--count" "item count want to get,optional, default 30"
+                 :parse-fn #(Integer. %) :default 30]
+                ["-f" "--format" "output format, optional, default edn":default "edn"])]
+    (if (> (count (filter nil? (vals (first pa)))) 0)
+      (println (last pa))
+      (run (first pa)))))

@@ -12,9 +12,9 @@
 
 (defn select-contents [res]
   (html/select res
-               #{[:td.title :a]
-                 [:td.subtext html/first-child]
-                 [:td.subtext html/last-child]}))
+               #{ [:td.title html/first-child]
+                  [:td.subtext html/first-child]
+                  [:td.subtext html/last-child]}))
 
 (defn gen-result [c]
   (reduce #(assoc %1 (:comments-link %2) %2)  {}

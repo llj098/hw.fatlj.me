@@ -8,5 +8,6 @@
                  [de.jetwick/snacktory "1.2"]
                  [org.clojure/data.json "0.2.2"]
                  [clj-time "0.5.1"]
-                 [org.clojure/tools.cli "0.2.2"]]
+                 [org.clojure/tools.cli "0.2.2"]
+                 [clj-rss "0.1.3"]]
    :main hn-analyse.core)

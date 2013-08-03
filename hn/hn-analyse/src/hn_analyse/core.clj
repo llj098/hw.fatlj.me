@@ -1,6 +1,7 @@
 (ns hn-analyse.core
   (:require [net.cgrand.enlive-html :as html]
-            [clojure.data.json :as json])
+            [clojure.data.json :as json]
+            [clj-rss.core :as rss])
   (:use [clojure.tools.cli :only [cli]])
   (:import (de.jetwick.snacktory HtmlFetcher))
   (:gen-class))
@@ -46,7 +47,12 @@
   (let [data (take count (map-to-results (files-to-map source)))]
     (cond
      (= format "edn") (clojure.pprint/pprint data)
-     (= format "md") (doseq [item (to-markdown data)] (println item)))))
+     (= format "md") (doseq [item (to-markdown data)] (println item))
+     (= format "rss")(println
+                      (apply rss/channel-xml {:title "Hacker Weekly"
+                                              :link "http://llj098.github.io/hw"
+                                              :description "weekly hacker news"}
+                             (map #(select-keys % [:title :link]) data))))))
 
 (defn -main [& args]
   (let [pa (cli args
